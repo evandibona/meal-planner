@@ -1,9 +1,23 @@
+local db = require("./lib/db.lua")
 local r = {}
 r.meta = ""
 r.tex = ""
+r.scale = 1
+
+local function standardize( q, ua, ub )
+  local lookup = {}
+    lookup["cups>tbs"] = 16
+    lookup["tbs>cups"] = 1/16
+  if ub == "cup" then ub = "cups" end
+  if ua == "cup" then ua = "cups" end
+  if ua == ub then
+    return q, ua
+  else 
+    return q * (lookup[ua..">"..ub]), ub
+  end
+end
 
 local function parseMeta( s )
-  -- Name: Ingredients: a, b, c
   local m = {}
   m.ingr  = {}
   local i = 0
@@ -34,6 +48,20 @@ function r.load(fn)
   local f = assert(io.open("recipes/"..fn..".tex"))
   r.meta, r.tex = parseRecipe( f:read("*all") )
   f:close()
+end
+
+function r.nutrition(recipe)
+  local nutrients = {}
+  print("   -------   "..r.meta.name)
+  for i,ingr in pairs( r.meta.ingr ) do
+    local ingr,s,u = db.get(ingr[1]), ingr[2], ingr[3]
+    for j,nutr in pairs( db.nutrients ) do
+      print( nutr, ingr.name, standardize( s,u,ingr.unit ) )
+    end
+  end
+  -- For each ingredient in recipe
+  --   scale nutrition to ingredient portion
+  --print( "nutrition" )
 end
 
 return r
