@@ -48,20 +48,29 @@ function r.load(fn)
   local f = assert(io.open("recipes/"..fn..".tex"))
   r.meta, r.tex = parseRecipe( f:read("*all") )
   f:close()
+  r.nutrients = r.calcNutrition()
 end
 
-function r.nutrition(recipe)
+function r.calcNutrition()
   local nutrients = {}
   print("   -------   "..r.meta.name)
   for i,ingr in pairs( r.meta.ingr ) do
-    local ingr,s,u = db.get(ingr[1]), ingr[2], ingr[3]
+    local ding = db.get(ingr[1])
+    local s,u = standardize(ingr[2], ingr[3], ding.unit)
     for j,nutr in pairs( db.nutrients ) do
-      print( nutr, ingr.name, standardize( s,u,ingr.unit ) )
+      if nutrients[nutr] then
+        nutrients[nutr] = s*ding[nutr] + nutrients[nutr]
+      else
+        nutrients[nutr] = s*ding[nutr]
+      end
     end
   end
-  -- For each ingredient in recipe
-  --   scale nutrition to ingredient portion
-  --print( "nutrition" )
+  nutrients['calories'] = 
+    nutrients['protein']*4 + 
+    nutrients['fat']*9 + 
+    nutrients['carbs']*4
+  
+  return nutrients
 end
 
 return r

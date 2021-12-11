@@ -14,7 +14,10 @@ plan.meals = {
 for i=1,#plan.meals do
   local recipe = require("./lib/recipe.lua")
   recipe.load(plan.meals[i])
-  recipe.nutrition()
+  print( "  Protein: ", recipe.nutrients['protein'] )
+  print( "  Fat: ", "", recipe.nutrients['fat'] )
+  print( "  Carbs: ",   recipe.nutrients['carbs'] )
+  print( "  Calories:", recipe.nutrients['calories'] ) 
 end
 
 -- Print Nutrition for Recipe
