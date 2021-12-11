@@ -5,15 +5,24 @@ r.tex = ""
 r.scale = 1
 
 local function standardize( q, ua, ub )
-  local lookup = {}
-    lookup["cups>tbs"] = 16
-    lookup["tbs>cups"] = 1/16
   if ub == "cup" then ub = "cups" end
   if ua == "cup" then ua = "cups" end
+  if ua == "lb" then ua = "lbs" end
+  if ub == "lb" then ub = "lbs" end
+  local lookup = {}
+    lookup["cups>tbs"] = 16
+    lookup["lbs>oz"]   = 16
+    lookup["tbs>cups"] = 1/16
+    lookup["tsp>tbs"]  = 1/3
+  local r = lookup[ua..">"..ub]
   if ua == ub then
     return q, ua
-  else 
-    return q * (lookup[ua..">"..ub]), ub
+  elseif not r then
+    print("ERROR  Couldn't find conversion for: "..ua..">"..ub,
+      "\n")
+    return nil
+  else
+    return q*r, ub
   end
 end
 
@@ -53,7 +62,6 @@ end
 
 function r.calcNutrition()
   local nutrients = {}
-  print("   -------   "..r.meta.name)
   for i,ingr in pairs( r.meta.ingr ) do
     local ding = db.get(ingr[1])
     local s,u = standardize(ingr[2], ingr[3], ding.unit)

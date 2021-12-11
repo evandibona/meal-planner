@@ -1,29 +1,20 @@
 -- Pseudocode. 
 
 local plan = require("./lib/planner.lua")
-plan.span = 1
 
-
---place recipes into slots
+-- Meal Plan Constructed
 plan.meals = {
-  "soup-carrot-leek",
-  "steak-dinner-one"
+  {
+    { "soup-carrot-leek" }, 
+    { 
+      "pan-ribeye",
+      "roasted-potatoes",
+      "sauteed-cabbage"
+    }, 
+  }
 }
 
--- load recipes
-for i=1,#plan.meals do
-  local recipe = require("./lib/recipe.lua")
-  recipe.load(plan.meals[i])
-  print( "  Protein: ", recipe.nutrients['protein'] )
-  print( "  Fat: ", "", recipe.nutrients['fat'] )
-  print( "  Carbs: ",   recipe.nutrients['carbs'] )
-  print( "  Calories:", recipe.nutrients['calories'] ) 
-end
+plan.eval()
 
--- Print Nutrition for Recipe
-
-
-
---set scales
 --output meal plan breakdown. 
 --generate latex doc 
