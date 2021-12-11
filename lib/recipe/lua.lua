@@ -65,6 +65,7 @@ function r.calcNutrition()
   for i,ingr in pairs( r.meta.ingr ) do
     local ding = db.get(ingr[1])
     local s,u = standardize(ingr[2], ingr[3], ding.unit)
+    s = s * r.scale
     for j,nutr in pairs( db.nutrients ) do
       if nutrients[nutr] then
         nutrients[nutr] = s*ding[nutr] + nutrients[nutr]
@@ -73,11 +74,6 @@ function r.calcNutrition()
       end
     end
   end
-  nutrients['calories'] = 
-    nutrients['protein']*4 + 
-    nutrients['fat']*9 + 
-    nutrients['carbs']*4
-  
   return nutrients
 end
 
