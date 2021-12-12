@@ -1,5 +1,6 @@
 local db = require("./lib/db.lua")
 local r = {}
+r.nutrients = {}
 r.meta = ""
 r.tex = ""
 r.scale = 1
@@ -53,28 +54,28 @@ local function parseRecipe(s)
   return m, t
 end
 
-function r.load(fn)
-  local f = assert(io.open("recipes/"..fn..".tex"))
-  r.meta, r.tex = parseRecipe( f:read("*all") )
-  f:close()
-  r.nutrients = r.calcNutrition()
-end
-
 function r.calcNutrition()
   local nutrients = {}
   for i,ingr in pairs( r.meta.ingr ) do
     local ding = db.get(ingr[1])
-    local s,u = standardize(ingr[2], ingr[3], ding.unit)
-    s = s * r.scale
+    local s,u = standardize(ingr[2]*r.scale, ingr[3], ding.unit)
     for j,nutr in pairs( db.nutrients ) do
       if nutrients[nutr] then
-        nutrients[nutr] = s*ding[nutr] + nutrients[nutr]
+        nutrients[nutr] = nutrients[nutr] + s*ding[nutr]
       else
         nutrients[nutr] = s*ding[nutr]
       end
     end
   end
   return nutrients
+end
+
+function r.load(fn)
+  local f = assert(io.open("recipes/"..fn..".tex"))
+  r.meta, r.tex = parseRecipe( f:read("*all") )
+  f:close()
+  r.name = fn
+  r.nutrients = r.calcNutrition()
 end
 
 return r

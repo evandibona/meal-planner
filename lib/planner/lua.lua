@@ -18,34 +18,29 @@ local function caloriesIn( v )
           v['carbs'] * 4
 end
 
-function p.eval()
-
--- load recipes
-  tally = {}
+function p.calc()
+  p.tally = {}
   p.feDMD(function( day, meal, dish )
-      print( dish )
-      local recipe = require("./lib/recipe.lua")
-      local ntrs = require("./lib/db.lua").nutrients
-      recipe.load( dish )
-        for i,ntr in pairs(ntrs) do
-          if tally[ntr] then
-            tally[ntr] = tally[ntr] + recipe.nutrients[ntr]
-          else
-            tally[ntr] = recipe.nutrients[ntr]
-          end
-        end
+    local ntrs = require("./lib/db.lua").nutrients
+    for i,ntr in pairs(ntrs) do
+      if p.tally[ntr] then
+        p.tally[ntr] = p.tally[ntr] + dish.nutrients[ntr]
+      else
+        p.tally[ntr] = dish.nutrients[ntr]
+      end
+    end
   end)
-  for ntr,v in pairs(tally) do
+end
+function p.eval()
+  if p.tally==nil then 
+    print("ERROR  Calculate nutrients first!")
+  end
+  print("\n")
+  for ntr,v in pairs(p.tally) do
     print("  "..string.upper(string.sub(ntr,1,3))..": ", 
       math.floor(v+0.5))
   end
-  print("Calories:  "..math.floor(caloriesIn(tally)+0.5))
-
+  print("  Calories:  "..math.floor(caloriesIn(p.tally)+0.5))
 end
 
--- Print Nutrition for Recipe
-
-
-
---set scales
 return p
