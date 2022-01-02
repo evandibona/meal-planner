@@ -18,23 +18,29 @@ Let's start with a simple one week diet.
 
 2 meals a day, averaging 1750 calories, giving 185 cal of space for snacks. 
 
+Leftovers! Perhaps explicit tracking is unnecessary, after all the week averages out anyways. 
+
 1) Steak
-  -Salad for lunch. 
-  -parm and peppercorn crusted, pg 68 spice
-  -cauliflower puree, and roast garlic, pg 105 Curtis
+  salad-cranberry-walnut
+  steak-cheese-crusted
+  cauliflower-puree
 2) Roasted Chicken
-  -grilled zucchini
+  roast-chicken-skillet
 7) No meat
-  -chicken lettuce wraps, pg 26 spice
-  -pot parsn soup, pg 80 of spice book
-  -frittata, pg 52 spice
+  chicken-lettuce-wraps
+  frittata-basic
+  soup-parsnip-potato
 4) Flank Steak
+  -marinated steak
   -acorn squash salad round, pg 74 spice
 5) Seafood
+  -white fish for lunch
   -scallop ceviche, pg 32 spices
 6) Meat balls
-  -sweet potato fries?
+  -Meat Balls
+  -sweet potato fries
 7) Chicken Soup
+  -Single recipe
 
 
 ## Feedback / Analytics needed
