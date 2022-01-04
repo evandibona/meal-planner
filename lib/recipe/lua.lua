@@ -11,19 +11,36 @@ local function standardize( q, ua, ub )
   if ua == "lb" then ua = "lbs" end
   if ub == "lb" then ub = "lbs" end
   local lookup = {}
+    lookup["shallots>oz"] = 0.85
+    lookup["cloves>oz"]   = 0.16
+    lookup["yolks>oz"]    = 0.58
+    lookup["sprigs>oz"]   = 0.0282
+    lookup["tbs>egg"]  = 1/2.75
     lookup["cups>tbs"] = 16
     lookup["lbs>oz"]   = 16
     lookup["tbs>cups"] = 1/16
     lookup["tsp>tbs"]  = 1/3
+    lookup["tbs>oz"]   = 0.52
+    lookup["g>oz"]     = 0.0353
+    lookup["cups>oz"]  = 8.33
+    lookup["tsp>oz"]   = 0.1735
+    lookup["oz>tbs"]   = 2
   local r = lookup[ua..">"..ub]
   if ua == ub then
     return q, ua
   elseif not r then
-    print("ERROR  Couldn't find conversion for: "..ua..">"..ub,
-      "\n")
-    return nil
+    print("ERROR  Couldn't find conversion for: "..ua..">"..ub)
+    return 1, "nil"
   else
     return q*r, ub
+  end
+end
+
+local function fr( s )
+  if s:find("/") then 
+    return ( s:sub(1,s:find("/")-1) / s:sub(s:find("/")+1,#s) )
+  else
+    return s
   end
 end
 
@@ -36,11 +53,12 @@ local function parseMeta( s )
     if i == 1 then 
       m.name = ln 
     else
-      local quant = string.sub(ln,string.find(ln,", ")+2,#ln)
+      local quant = ln:sub(ln:find(", ")+2,#ln)
+      local qty = quant:sub(1,quant:find(" ")-1)
       table.insert(m.ingr,{
-        string.sub(ln,3, string.find(ln,",")-1),
-        string.sub(quant,1,string.find(quant," ")-1), 
-        string.sub(quant,string.find(quant," ")+1,#quant)
+        ln:sub(3,ln:find(",")-1),
+        fr( qty ),
+        quant:sub(quant:find(" ")+1,#quant)
       })
     end
   end
@@ -71,6 +89,7 @@ function r.calcNutrition()
 end
 
 function r.load(fn)
+  print("","---   "..fn.."   ---")
   local f = assert(io.open("recipes/"..fn..".tex"))
   r.meta, r.tex = parseRecipe( f:read("*all") )
   f:close()

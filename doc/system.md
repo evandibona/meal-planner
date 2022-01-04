@@ -24,3 +24,19 @@ Will need to figure out how to generate this list
 May need a separate lookup table for a sprig of thyme, x number of zucchini, egg, carrot, etc.
 
 Might make the most sense to use my discernment in writing the recipe and then using the table to estimate the amount of the ingredient for the final tex file. 
+
+-----------------
+
+# Progression
+
+For now I want lots of control to balance the day to day and the weekly nutrients. 
+
+Scale, and Leftovers are going to each have their own meta info.
+
+However when this is expanded to have recipes for months at a time, that level of control is still useful, but unwieldy. So I think that necessitates another tool. 
+
+## Mass Recipe Scheduler
+
+1) Meal Generator, takes and combines a starch, protein, vegetable
+2) Stacks, Separate folder to where recipes are placed in. 
+   Specifically for that unique plan and diet. 

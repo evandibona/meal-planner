@@ -49,7 +49,7 @@ function db.get(ingr)
     end
   end
   print("ERROR  Could not find ingredient: "..ingr)
-  return nil
+  return db.ingredients[1]
 end
 
 return db

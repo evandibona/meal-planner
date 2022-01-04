@@ -12,6 +12,12 @@ function p.feDMD( fx )
   end
 end
 
+function p.checkMeals()
+  p.feDMD(function( day, meal, dish )
+    print(day, meal, dish)
+  end)
+end
+
 local function caloriesIn( v )
   return  v['protein']*4 +
           v['fat'] * 9 +
