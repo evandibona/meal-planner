@@ -14,6 +14,11 @@ local function standardize( q, ua, ub )
     lookup["shallots>oz"] = 0.85
     lookup["cloves>oz"]   = 0.16
     lookup["yolks>oz"]    = 0.58
+    lookup["head of garlic>oz"] = 0
+    lookup["rib>oz"] = 0
+    lookup["onion>oz"]  = 0
+    lookup["eggs>oz"] = 0
+    lookup["carrots>oz"]  = 0
     lookup["sprigs>oz"]   = 0.0282
     lookup["tbs>egg"]  = 1/2.75
     lookup["cups>tbs"] = 16
@@ -25,6 +30,8 @@ local function standardize( q, ua, ub )
     lookup["cups>oz"]  = 8.33
     lookup["tsp>oz"]   = 0.1735
     lookup["oz>tbs"]   = 2
+    lookup["pint>oz"]  = 0
+    lookup["tbsp>oz"] = 0
   local r = lookup[ua..">"..ub]
   if ua == ub then
     return q, ua
