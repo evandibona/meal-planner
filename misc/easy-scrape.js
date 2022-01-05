@@ -1,4 +1,4 @@
-// fatsecret.com
+	// fatsecret.com
 
 var macros = $('td.fact div.factValue').map(function(){
   return $(this).text().replace("g","")
@@ -6,16 +6,16 @@ var macros = $('td.fact div.factValue').map(function(){
 
 var ingr = $('div.summarypanelcontent h1').text()
 var sval = $('td.serving_size_value').text()
-	.split(", ")[0].split(" ")
-var unit = sval[1]
-var quant = sval[0]
+  .split(", ")[0].split(" ")
+var unit = sval[1].trim()
+var quant = sval[0].trim()
+macros[0] = macros[0].trim()
+macros[1] = macros[1].trim()
+macros[2] = macros[2].trim()
+macros[3] = macros[3].trim()
 console.log(
-	"\n\t{",
-  "\n\t\t","n = " + "'" + ingr + "'"+",",
-  "\n\t\t","s="+quant+",u='"+unit+"',",
-  "\n\t\t","cal = " + macros[0]+",",
-  "\n\t\t","pro = " + macros[1]+",",
-  "\n\t\t","fat = " + macros[2]+",",
-  "\n\t\t","crb = " + macros[3]+",",
-  "\n\t},"
+  "\n\n,",
+  quant,",\t",unit,",\t",macros[3],",\t",macros[1],",\t",macros[2],
+  "\n\n"
 )
+

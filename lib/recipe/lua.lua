@@ -11,27 +11,27 @@ local function standardize( q, ua, ub )
   if ua == "lb" then ua = "lbs" end
   if ub == "lb" then ub = "lbs" end
   local lookup = {}
+    lookup["head of garlic>oz"] = 1.7
     lookup["shallots>oz"] = 0.85
+    lookup["carrots>oz"]  = 2.05
     lookup["cloves>oz"]   = 0.16
     lookup["yolks>oz"]    = 0.58
-    lookup["head of garlic>oz"] = 0
-    lookup["rib>oz"] = 0
-    lookup["onion>oz"]  = 0
-    lookup["eggs>oz"] = 0
-    lookup["carrots>oz"]  = 0
     lookup["sprigs>oz"]   = 0.0282
-    lookup["tbs>egg"]  = 1/2.75
+    lookup["onion>oz"]  = 3.8
+    lookup["eggs>oz"] = 2.75
+    lookup["tbs>egg"]  = 1/lookup["eggs>oz"]
+    lookup["rib>oz"] = 1.8
+
     lookup["cups>tbs"] = 16
-    lookup["lbs>oz"]   = 16
     lookup["tbs>cups"] = 1/16
     lookup["tsp>tbs"]  = 1/3
-    lookup["tbs>oz"]   = 0.52
-    lookup["g>oz"]     = 0.0353
     lookup["cups>oz"]  = 8.33
+    lookup["pint>oz"]  = 16.65
+    lookup["tbs>oz"]   = 0.52
+    lookup["lbs>oz"]   = 16
     lookup["tsp>oz"]   = 0.1735
     lookup["oz>tbs"]   = 2
-    lookup["pint>oz"]  = 0
-    lookup["tbsp>oz"] = 0
+    lookup["g>oz"]     = 0.0353
   local r = lookup[ua..">"..ub]
   if ua == ub then
     return q, ua
