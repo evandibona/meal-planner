@@ -10,29 +10,42 @@ local function standardize( q, ua, ub )
   if ua == "cup" then ua = "cups" end
   if ua == "lb" then ua = "lbs" end
   if ub == "lb" then ub = "lbs" end
-  local lookup = {}
-    lookup["head of garlic>oz"] = 1.7
-    lookup["shallots>oz"] = 0.85
-    lookup["carrots>oz"]  = 2.05
-    lookup["cloves>oz"]   = 0.16
-    lookup["yolks>oz"]    = 0.58
-    lookup["sprigs>oz"]   = 0.0282
-    lookup["onion>oz"]  = 3.8
-    lookup["eggs>oz"] = 2.75
-    lookup["tbs>egg"]  = 1/lookup["eggs>oz"]
-    lookup["rib>oz"] = 1.8
+  local t = {}
+    t["head of garlic>oz"] = 1.7
+    t["onions>onion"]      = 1
+    t["shallots>oz"] = 0.85
+    t["carrots>oz"]  = 2.05
+    t["cloves>oz"]   = 0.16
+    t["yolks>oz"]    = 0.58
+    t["sprigs>oz"]   = 0.0282
+    t["onion>oz"]    = 3.8
+    t["g>leaves"]    = 12
+    t["eggs>oz"]     = 2.2
+    t["oz>eggs"]     = t["eggs>oz"]
+    t["oz>egg"]      = t["eggs>oz"]
+    t["tbs>egg"]     = 1/1.12
+    t["ribs>oz"]     = 1.8
 
-    lookup["cups>tbs"] = 16
-    lookup["tbs>cups"] = 1/16
-    lookup["tsp>tbs"]  = 1/3
-    lookup["cups>oz"]  = 8.33
-    lookup["pint>oz"]  = 16.65
-    lookup["tbs>oz"]   = 0.52
-    lookup["lbs>oz"]   = 16
-    lookup["tsp>oz"]   = 0.1735
-    lookup["oz>tbs"]   = 2
-    lookup["g>oz"]     = 0.0353
-  local r = lookup[ua..">"..ub]
+    t["tsp>dash"]   = 0.2
+    t["tsp>g"]      = 0.2
+    t["tsp>tbs"]    = 1/3
+    t["tsp>oz"]     = 0.1735
+    t["tsp>cups"]   = 0.02083
+    t["tbs>tsp"]    = 3
+    t["tbs>cups"]   = 1/16
+    t["cups>oz"]    = 8.33
+    t["cups>tbs"]   = 16
+    t["cups>tsp"]   = 48
+    t["pint>oz"]    = 16.65
+    t["pints>cups"] = 2
+    t["tbs>oz"]     = 0.52
+    t["lbs>oz"]     = 16
+    t["oz>tbs"]     = 2
+    t["oz>g"]       = 28.35
+    t["g>tsp"]      = 1/t["tsp>g"]
+    t["g>oz"]       = 0.0353
+
+  local r = t[ua..">"..ub]
   if ua == ub then
     return q, ua
   elseif not r then
@@ -83,20 +96,25 @@ function r.calcNutrition()
   local nutrients = {}
   for i,ingr in pairs( r.meta.ingr ) do
     local ding = db.get(ingr[1])
+    --io.write(">>> ")
+    --io.write(ingr[1].."\t"..ingr[2].."|"..ingr[3])
     local s,u = standardize(ingr[2]*r.scale, ingr[3], ding.unit)
+      s = tonumber(s)/ding.quantity
     for j,nutr in pairs( db.nutrients ) do
+      --io.write(" *"..ding[nutr])
       if nutrients[nutr] then
         nutrients[nutr] = nutrients[nutr] + s*ding[nutr]
       else
         nutrients[nutr] = s*ding[nutr]
       end
     end
+    --io.write("\n")
   end
   return nutrients
 end
 
 function r.load(fn)
-  print("","---   "..fn.."   ---")
+  ---print("","---   "..fn.."   ---")
   local f = assert(io.open("recipes/"..fn..".tex"))
   r.meta, r.tex = parseRecipe( f:read("*all") )
   f:close()

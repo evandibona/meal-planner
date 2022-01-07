@@ -17,40 +17,50 @@ end
 
 plan.meals = {
   {
-    { r("salad-cranberry-walnut",{1}) }, 
-    { r("steak-cheese-crusted",{1}) }, 
-    { r("cauliflower-puree",{1}) }, 
+    { r("salad-cranberry-walnut", {1}) }, 
+    { 
+      r("steak-cheese-crusted",   {0.5}), 
+      r("cauliflower-puree",      {0.5}) 
+    }, 
   },
   {
-    { r("roast-chicken-skillet",{}) },
+    { r("roast-chicken-skillet",  {0.75}) },
   },
   {
-    { r("frittata-basic",{}) },
-    { r("chicken-lettuce-wraps",{}) },
-    { r("soup-parsnip-potato",{}) },
+    { r("frittata-basic",         {0.7}) },
+    { 
+      r("chicken-lettuce-wraps",  {0.35}) 
+    },
   },
   {
-    { r("flank-steak",{}) },
-    { r("simple-marinade",{}) },
-    { r("acorn-squash-salad-rounds",{}) },
+    { 
+      r("flank-steak",            {0.70}), 
+      r("simple-marinade",        {0.05}), 
+      r("acorn-squash-salad-rounds",{0.20})
+    },
+    { 
+      r("soup-parsnip-potato",    {0.6})
+    },
   },
   {
-    { r("baked-cod-lemon-garlic",{}) }, 
-    { r("bay-scallop-ceviche",{}) },
+    { r("bay-scallop-ceviche",    {}) },
+    { r("baked-cod-lemon-garlic", {0.75}) }, 
   },
   {
-    { r("swedish-meat-balls",{}) },
-    { r("sweet-potato-fries",{}) },
-    { r("southern-style-collards",{}) },
+    { r("swedish-meat-balls",     {0.25}), 
+      r("sweet-potato-fries",     {0.5}), 
+      r("southern-style-collards",{0.125})
+    },
   },
   {
-    { r("slow-cooker-chicken-soup",{}) },
+    { r("slow-cooker-chicken-soup",{0.25}) },
   },
 }
+  --[[
+  --]]
 
-plan.checkMeals()
---plan.calc()
---plan.eval()
+--plan.checkMeals()
+plan.eval()
 
 -----------------------------
 --output meal plan breakdown. 
