@@ -56,7 +56,7 @@ local function standardize( q, ua, ub )
   end
 end
 
-local function fr( s )
+local function ffr( s )
   if s:find("/") then 
     return ( s:sub(1,s:find("/")-1) / s:sub(s:find("/")+1,#s) )
   else
@@ -66,39 +66,48 @@ end
 
 local function parseMeta( s )
   local m = {}
-  m.ingr  = {}
-  local i = 0
-  for ln in string.gmatch(s, "[^\n]+") do
-    i = i + 1  
-    if i == 1 then 
-      m.name = ln 
+        m.ingredients = {}
+        m.name = s:sub( s:find("section{")+8, s:find("}")-1 )
+        m.name = m.name:gsub("\\&", "and")
+  s = s:sub( s:find("\\begin{it")+16, s:find("\\end{it")-2 )
+  for ln in s:gmatch( "[^\n]*" ) do
+    ln = ln:sub(9, #s)
+    local qu  = ln:match("<(.*)>")
+    local q,u = "",""
+    if not qu:find(" ") then
+      u = ln:match("> ([^\n,]*)")
+      qs= qu
+      q = tonumber( ffr(qu) )
     else
-      local quant = ln:sub(ln:find(", ")+2,#ln)
-      local qty = quant:sub(1,quant:find(" ")-1)
-      table.insert(m.ingr,{
-        ln:sub(3,ln:find(",")-1),
-        fr( qty ),
-        quant:sub(quant:find(" ")+1,#quant)
-      })
+      u = qu:match(" (.*)")
+      qs= qu:match("[%d/]+")
+      q = tonumber( ffr( qu:match("[%d/]+") ) )
     end
+    n = ln:match("> ([^,\n]*)")
+    u = u:lower()
+    local i = {} i.quant, i.quants, i.unit, i.name = q, qs, u, n
+    table.insert( m.ingredients, i )
   end
   return m
 end
 
 local function parseRecipe(s)
-  m = string.sub(s,1,string.find(s,'%%+')-1)
-  t = string.sub(s,string.find(s,'%%\n')+1,#s)
-  m = parseMeta(m)
+  -- Scrape the Meta
+    -- name
+    -- ingredients
+  -- Replace the quantity and name with symbol, (I)
+  local m = parseMeta( s )
+  local t = s:gsub("<[^\n]*,", "(I)")
+        t = t:gsub("<[^\n]*",  "(I)")
   return m, t
 end
 
 function r.calcNutrition()
   local nutrients = {}
-  for i,ingr in pairs( r.meta.ingr ) do
-    local ding = db.get(ingr[1])
-    --io.write(">>> ")
-    --io.write(ingr[1].."\t"..ingr[2].."|"..ingr[3])
-    local s,u = standardize(ingr[2]*r.scale, ingr[3], ding.unit)
+  for i,ingr in pairs( r.meta.ingredients ) do
+    local ding = db.get(ingr.name)
+    local s,u = 
+      standardize(ingr.quant*r.scale, ingr.unit, ding.unit)
       s = tonumber(s)/ding.quantity
     for j,nutr in pairs( db.nutrients ) do
       --io.write(" *"..ding[nutr])
@@ -116,7 +125,7 @@ end
 function r.load(fn)
   ---print("","---   "..fn.."   ---")
   local f = assert(io.open("recipes/"..fn..".tex"))
-  r.meta, r.tex = parseRecipe( f:read("*all") )
+  r.meta, r.template = parseRecipe( f:read("*all") )
   f:close()
   r.name = fn
   r.nutrients = r.calcNutrition()

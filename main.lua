@@ -56,11 +56,12 @@ plan.meals = {
     { r("slow-cooker-chicken-soup",{0.25}) },
   },
 }
-  --[[
-  --]]
+--[[
+--]]
 
---plan.checkMeals()
 plan.eval()
+--plan.tex.dry()
+--plan.tex.wet( "template.tex", "output.tex" )
 
 -----------------------------
 --output meal plan breakdown. 
