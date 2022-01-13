@@ -24,10 +24,10 @@ plan.meals = {
     }, 
   },
   {
-    { r("roast-chicken-skillet",  {0.75}) },
+    { r("roast-chicken-skillet",  {1.1}) },
   },
   {
-    { r("frittata-basic",         {0.7}) },
+    { r("frittata-basic",         {1}) },
     { 
       r("chicken-lettuce-wraps",  {0.35}) 
     },
@@ -39,7 +39,7 @@ plan.meals = {
       r("acorn-squash-salad-rounds",{0.20})
     },
     { 
-      r("soup-parsnip-potato",    {0.6})
+      r("soup-parsnip-potato",    {1.2})
     },
   },
   {
@@ -56,12 +56,19 @@ plan.meals = {
     { r("slow-cooker-chicken-soup",{0.25}) },
   },
 }
---[[
---]]
 
 plan.eval()
---plan.tex.dry()
---plan.tex.wet( "template.tex", "output.tex" )
+--[[
+tex.wet( 
+  {
+    template = "template.tex",
+    shoppingList = plan.ingredientsByWeek(), 
+    recipes = plan.recipesCompiled(), 
+    weeklyReport = plan.nutritionByWeek(),
+    weeklySchedule = plan.scheduleByWeek()
+  }, 
+  "/home/evan/downloads/blank.tex" )
+--]]
 
 -----------------------------
 --output meal plan breakdown. 

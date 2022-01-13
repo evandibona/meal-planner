@@ -11,14 +11,18 @@ local function standardize( q, ua, ub )
   if ua == "lb" then ua = "lbs" end
   if ub == "lb" then ub = "lbs" end
   local t = {}
-    t["head of garlic>oz"] = 1.7
-    t["onions>onion"]      = 1
+    t["head of garlic>oz"]  = 1.7
+    t["large eggs>oz"]      = 2
+    t["onions>onion"]       = 1
+    t["scallions>oz"]       = 0.25
+    t["cucumber>oz"] = 7
     t["shallots>oz"] = 0.85
     t["carrots>oz"]  = 2.05
     t["cloves>oz"]   = 0.16
     t["yolks>oz"]    = 0.58
     t["sprigs>oz"]   = 0.0282
     t["onion>oz"]    = 3.8
+    t["mango>oz"]    = 4.95
     t["g>leaves"]    = 12
     t["eggs>oz"]     = 2.2
     t["oz>eggs"]     = t["eggs>oz"]
@@ -33,6 +37,7 @@ local function standardize( q, ua, ub )
     t["tsp>cups"]   = 0.02083
     t["tbs>tsp"]    = 3
     t["tbs>cups"]   = 1/16
+    t["tbs>g"]      = 14.79
     t["cups>oz"]    = 8.33
     t["cups>tbs"]   = 16
     t["cups>tsp"]   = 48
@@ -40,6 +45,7 @@ local function standardize( q, ua, ub )
     t["pints>cups"] = 2
     t["tbs>oz"]     = 0.52
     t["lbs>oz"]     = 16
+    t["oz>cups"]     = 0.12
     t["oz>tbs"]     = 2
     t["oz>g"]       = 28.35
     t["g>tsp"]      = 1/t["tsp>g"]
@@ -49,7 +55,7 @@ local function standardize( q, ua, ub )
   if ua == ub then
     return q, ua
   elseif not r then
-    print("ERROR  Couldn't find conversion for: "..ua..">"..ub)
+    print( "ERROR  Couldn't find conversion for: "..ua..">"..ub)
     return 1, "nil"
   else
     return q*r, ub
@@ -105,9 +111,9 @@ end
 function r.calcNutrition()
   local nutrients = {}
   for i,ingr in pairs( r.meta.ingredients ) do
-    local ding = db.get(ingr.name)
-    local s,u = 
-      standardize(ingr.quant*r.scale, ingr.unit, ding.unit)
+    local ding = db.get(ingr.name,r.meta.name)
+    local s,u = standardize(ingr.quant*r.scale, 
+                ingr.unit, ding.unit)
       s = tonumber(s)/ding.quantity
     for j,nutr in pairs( db.nutrients ) do
       --io.write(" *"..ding[nutr])

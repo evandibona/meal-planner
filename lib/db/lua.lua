@@ -1,10 +1,7 @@
 local function trim( s )
-  o = ""..s
-  if string.sub(s,1,1) == " " then
-    s = string.sub(s,(string.find(s,"[%s][%a%d]")or 0)+1,#s)
-  end
-  return s
+  return s:gsub("^%s*(.-)%s*$", "%1")
 end
+
 local function splitRow( str )
   local m = {""}
   for i=1,#str do
@@ -20,6 +17,7 @@ local function splitRow( str )
   end
   return m
 end
+
 local function loadCsv(csv)
   local keys = {}
   local ingredients = {}
@@ -42,13 +40,14 @@ end
 local db = {}
 db.ingredients, db.nutrients = loadCsv("recipes/db.csv")
 
-function db.get(ingr)
+function db.get(ingr, r)
+  r = r or ""
   for k, v in pairs( db.ingredients ) do
     if v.name == ingr then
       return v
     end
   end
-  print("ERROR  Could not find ingredient: "..ingr)
+  print("ERROR  Could not find ingredient: "..ingr, r)
   return db.ingredients[1]
 end
 

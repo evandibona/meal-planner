@@ -72,11 +72,41 @@ function p.eval()
       print( "\nDay "..day )
     end
   )
+  local function printN( n, g, u )
+    local u = u or "g"
+    local m = 1
+    if u=='mg' then 
+      m = 1000
+    elseif u == 'mcg' then
+      m = 1000000
+    end
+    local v = math.floor(p.tally[n]*m)
+    local g = g or v
+    print(fix(n..":",32)..
+          fix(v.."",5).." / "..fix(g.." ",7)..u)
+  end
   print("\n----  TOTALS  ----")
   print("Calories: "..math.floor(caloriesIn( p.tally ))..
     "/12600")
-  --[[
-  --]]
+  printN( 'Protein', 98*7)
+  printN( 'Fat', 46*7 )
+  printN( 'Carbohydrate', 214*7 )
+  printN( 'Sugars', 9*7 )
+  printN( 'Fiber', 31*7 )
+  printN( 'Vitamin A', 950*7, 'mcg' )
+  printN( 'Vitamin B6', 5*7, 'mg' )
+  printN( 'Vitamin B12', 3*7, 'mg' )
+  printN( 'Vitamin C', 100*7, 'mg' )
+  printN( 'Vitamin D', 4*7, 'mcg' )
+  printN( 'Vitamin K', 275*7, 'mcg' )
+  printN( 'Selenium', 285*7, 'mcg' )
+  printN( 'Zinc', 10*7, 'mg' )
+  printN( 'Copper', 2*7, 'mg' )
+  printN( 'Iodine', 8.25*7, 'mg' )
+  printN( 'Magnesium', 500*7, 'mg' )
+  printN( 'Sodium', 16*7 )
+  printN( 'Calcium', .850*7 )
+  printN( 'Iron', 8*7, 'mg' )
   
   -- Then a line in the DB, should be dedicated to the ideal 
   --  consumption for the client
