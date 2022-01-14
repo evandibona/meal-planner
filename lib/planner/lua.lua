@@ -1,12 +1,5 @@
 local p = {}
-
--- Rewrite to include 2 other function "interrupts"
-
-local function fix( s, l )
-  local t = s..""
-  for i=1,l-#s do t = t.." " end
-  return t
-end
+local util = require("./lib/util.lua")
 
 function p.feDMD( fdish, fmeal, fmeall, fday, fdayy )
   fmeal = fmeal or function() end
@@ -57,7 +50,7 @@ function p.eval()
     function( day, meal, dish )
       p.runningT( dish.nutrients )
       local info = "c:"..math.floor(caloriesIn( dish.nutrients ))
-      print( "    "..fix(dish.meta.name,33)..info )
+      print( "    "..util.fix(dish.meta.name,33)..info )
     end,
     function( day, meal )
       p.mtally = p.clearT()
@@ -82,34 +75,85 @@ function p.eval()
     end
     local v = math.floor(p.tally[n]*m)
     local g = g or v
-    print(fix(n..":",32)..
-          fix(v.."",5).." / "..fix(g.." ",7)..u)
+    print(util.fix(n..":",32)..
+          util.fix(v.."",5).." / "..util.fix(g.." ",7)..u)
   end
   print("\n----  TOTALS  ----")
   print("Calories: "..math.floor(caloriesIn( p.tally ))..
     "/12600")
-  printN( 'Protein', 98*7)
-  printN( 'Fat', 46*7 )
-  printN( 'Carbohydrate', 214*7 )
-  printN( 'Sugars', 9*7 )
-  printN( 'Fiber', 31*7 )
-  printN( 'Vitamin A', 950*7, 'mcg' )
+  printN( 'Protein', 95*7)
+  printN( 'Fat', 44*7 )
+  printN( 'Carbohydrate', 207*7 )
+  printN( 'Sugars', 30*7 )
+  printN( 'Fiber', 28*7 )
+  printN( 'Vitamin A', 800*7, 'mcg' )
   printN( 'Vitamin B6', 5*7, 'mg' )
   printN( 'Vitamin B12', 3*7, 'mg' )
-  printN( 'Vitamin C', 100*7, 'mg' )
-  printN( 'Vitamin D', 4*7, 'mcg' )
-  printN( 'Vitamin K', 275*7, 'mcg' )
+  printN( 'Vitamin C', 80*7, 'mg' )
+  printN( 'Vitamin D', 2.5*7, 'mcg' )
+  printN( 'Vitamin K', 150*7, 'mcg' )
   printN( 'Selenium', 285*7, 'mcg' )
   printN( 'Zinc', 10*7, 'mg' )
-  printN( 'Copper', 2*7, 'mg' )
-  printN( 'Iodine', 8.25*7, 'mg' )
+  printN( 'Copper', 1.5*7, 'mg' )
+  printN( 'Iodine', 8*7, 'mg' )
   printN( 'Magnesium', 500*7, 'mg' )
   printN( 'Sodium', 16*7 )
-  printN( 'Calcium', .850*7 )
+  printN( 'Calcium', 700*7, 'mg' )
   printN( 'Iron', 8*7, 'mg' )
   
   -- Then a line in the DB, should be dedicated to the ideal 
   --  consumption for the client
 end
+
+function p.ingredientsByWeek()
+  local lists, list = {}, {}
+  local x, y = 0, 0
+  p.feDMD(
+    function( d, m, dish )
+      for i=1,#dish.meta.ingredients do
+        local ing = dish.meta.ingredients[i]
+        local li  = list[ing.name] 
+        if li then
+          if ing.unit == li[2] then
+            li[1] = li[1] + ing.quant
+          else
+            li[1] = li[1] + 
+              util.standardize(ing.quant, ing.unit, li[2])
+          end
+        else
+          list[ing.name] = { ing.quant, ing.unit }
+        end
+        --print(util.fix(ing.name,44), ing.quant, ing.unit)
+      end
+    end,
+    function() end,
+    function() end,
+    function( day ) 
+      y = math.floor(day/7)
+      if x ~= y then 
+        table.insert(lists, list)
+        print(">>>") 
+      end
+      x = y
+    end
+  )
+  for i=1,#lists do
+    for k, v in pairs(lists[i]) do
+      print( util.fix(k, 32), v[1], v[2] )
+    end
+  end
+end
+
+function p.recipesCompiled()
+end
+
+function p.nutritionByWeek()
+end
+
+function p.scheduleByWeek()
+end
+
+
+
 
 return p
