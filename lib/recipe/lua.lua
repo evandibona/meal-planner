@@ -2,7 +2,6 @@ local db = require("./lib/db.lua")
 local r = {}
 r.nutrients = {}
 r.meta = ""
-r.tex = ""
 r.scale = 1
 
 local function ffr( s )
@@ -41,14 +40,26 @@ local function parseMeta( s )
 end
 
 local function parseRecipe(s)
-  -- Scrape the Meta
-    -- name
-    -- ingredients
-  -- Replace the quantity and name with symbol, (I)
   local m = parseMeta( s )
   local t = s:gsub("<[^\n]*,", "(I)")
         t = t:gsub("<[^\n]*",  "(I)")
   return m, t
+end
+
+function r.tex()
+  local util = require("./lib/util.lua")
+  local i = 0
+  local tex = r.template:gsub("%(I%)", function(s)
+    i = i + 1
+    local ing = r.meta.ingredients[i]
+    ing.quants = util.tofrac(ing.quant*r.scale)
+    return 
+      ing.quants.." "..
+      ing.unit.." "..
+      (ing.name):lower()..", "
+  end)
+  tex = "\n\\newpage"..tex:gsub("subsection{", "subsection*{")
+  return tex
 end
 
 function r.calcNutrition()

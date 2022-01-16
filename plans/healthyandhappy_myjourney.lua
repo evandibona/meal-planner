@@ -13,66 +13,67 @@ end
 plan.meals = {
   { -- Week 1 Work Day
     {
-      r("chicken-quinoa-bowls", {1}),
-      r("balsamic-dressing", {1}) 
+      r("chicken-quinoa-bowls", {1/5}),
+      r("balsamic-dressing",    {1/7}) 
     }, 
     {
-      r("freezer-burritos", {1}),
-      r("classic-chickpea-hummus", {1}),
+      r("freezer-burritos", {1.09/7}),
+      r("classic-chickpea-hummus", {1.2/5}),
       r("dipping-veggies", {1}) 
     }, 
   },
   { -- Week 1 Work Day
     {
-      r("chicken-quinoa-bowls", {1}),
-      r("balsamic-dressing", {1}) 
+      r("chicken-quinoa-bowls", {1/5}),
+      r("balsamic-dressing",    {1/7}) 
     }, 
     {
-      r("freezer-burritos", {1}),
-      r("classic-chickpea-hummus", {1}),
+      r("freezer-burritos", {1.09/7}),
+      r("classic-chickpea-hummus", {1.2/5}),
       r("dipping-veggies", {1}) 
     }, 
   },
   { -- Week 1 Work Day
     {
-      r("chicken-quinoa-bowls", {1}),
-      r("balsamic-dressing", {1}) 
+      r("chicken-quinoa-bowls", {1/5}),
+      r("balsamic-dressing",    {1/7}) 
     }, 
     {
-      r("freezer-burritos", {1}),
-      r("classic-chickpea-hummus", {1}),
+      r("freezer-burritos", {1.09/7}),
+      r("classic-chickpea-hummus", {1.2/5}),
       r("dipping-veggies", {1}) 
     }, 
   },
   { -- Week 1 Work Day
     {
-      r("chicken-quinoa-bowls", {1}),
-      r("balsamic-dressing", {1}) 
+      r("chicken-quinoa-bowls", {1/5}),
+      r("balsamic-dressing",    {1/7}) 
     }, 
     {
-      r("freezer-burritos", {1}),
-      r("classic-chickpea-hummus", {1}),
+      r("freezer-burritos", {1.09/7}),
+      r("classic-chickpea-hummus", {1.2/5}),
       r("dipping-veggies", {1}) 
     }, 
   },
   { -- Week 1 Work Day
     {
-      r("chicken-quinoa-bowls", {1}),
-      r("balsamic-dressing", {1}) 
+      r("chicken-quinoa-bowls", {1/5}),
+      r("balsamic-dressing",    {1/7}) 
     }, 
     {
-      r("freezer-burritos", {1}),
-      r("classic-chickpea-hummus", {1}),
+      r("freezer-burritos", {1.09/7}),
+      r("classic-chickpea-hummus", {1.2/5}),
       r("dipping-veggies", {1}) 
     }, 
   },
   { -- Week 1 Weekend
-    { r("romaine-salad", {1}) },
-    { r("slow-cooker-char-siu-pork", {1}) }
+    { r("romaine-salad",        {1.0}), 
+      r("balsamic-dressing",    {1/6}) },
+    { r("slow-cooker-char-siu-pork", {0.32}) }
   },
   { -- Week 1 Weekend
-    { r("slow-cooker-char-siu-pork", {1}) },
-    { r("roasted-cauliflower-red-pepper-soup", {1}) },
+    { r("slow-cooker-char-siu-pork", {0.222}) },
+    { r("roasted-cauliflower-red-pepper-soup", {0.61}) },
   },
 }
 
@@ -80,7 +81,13 @@ plan.meals = {
 ]]
 
 --plan.eval()
-plan.ingredientsByWeek()
+--plan.ingredientsByWeek()
+print( plan.scheduleTex() )
+local recipes = plan.recipesCompiled() 
+for n,v in pairs(recipes) do
+  --print( v.tex() )
+end
+
 --[[
 tex.wet( 
   {

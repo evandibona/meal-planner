@@ -71,5 +71,38 @@ function u.standardize( q, ua, ub )
   end
 end
 
+function u.tofrac( n )
+  local function test( m,l )
+    m = m*l
+    return (m-math.floor( m ))+0.05
+  end
+  local function tf( n, f )
+    local w = math.floor(n)
+    if w > 0 then
+      n = n-w
+      return w.." "..math.ceil(n/(1/f)).."/"..f
+    else
+      return math.floor(n/(1/f)).."/"..f
+    end
+  end
+  if test(n,1) == 0 then
+    return "0"
+    --[[
+  elseif test(n,2)  < 0.1 then
+    return tf(n,2)
+  elseif test(n,3)  < 0.1 then
+    return tf(n,3)
+  elseif test(n,4)  < 0.1 then
+    return tf(n,4)
+  elseif test(n,8)  < 0.1 then
+    return tf(n,8)
+  elseif test(n,16) < 0.1 then
+    return tf(n,16)
+    --]]
+  else
+    return math.floor(n*1000)/1000
+  end
+end
+
 
 return u

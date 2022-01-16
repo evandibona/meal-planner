@@ -80,7 +80,7 @@ function p.eval()
   end
   print("\n----  TOTALS  ----")
   print("Calories: "..math.floor(caloriesIn( p.tally ))..
-    "/12600")
+    "/11228") -- 1604 / day
   printN( 'Protein', 95*7)
   printN( 'Fat', 44*7 )
   printN( 'Carbohydrate', 207*7 )
@@ -132,25 +132,90 @@ function p.ingredientsByWeek()
       y = math.floor(day/7)
       if x ~= y then 
         table.insert(lists, list)
-        print(">>>") 
       end
       x = y
     end
   )
-  for i=1,#lists do
-    for k, v in pairs(lists[i]) do
-      print( util.fix(k, 32), v[1], v[2] )
-    end
-  end
+  return lists
 end
 
 function p.recipesCompiled()
+  local r = {}
+  p.feDMD(
+    function( d, m, dish )
+      if r[dish.name] then
+        local i = dish.meta.ingredients
+        for j,n in ipairs( i ) do
+          local o = r[dish.name].meta.ingredients[j]
+          if o.unit == n.unit then
+            o.quant = o.quant + n.quant
+          else print("ERROR, needs standardize")
+          end
+        end
+      else
+        r[dish.name] = dish
+      end
+    end
+  )
+  return r
+end
+
+function p.scheduleTex()
+  local t = ""
+  local tex = require("./lib/tex.lua")
+  local x, y = 1, 0
+  local meal = ""
+  local mealn = {}
+  p.feDMD(
+    function( d, m, dish )
+      meal = meal..", "..dish.name
+      mealn['Sugars'] = mealn['Sugars']+dish.nutrients['Sugars']
+      mealn['Fiber']  = mealn['Fiber'] +dish.nutrients['Fiber']
+      mealn['Copper'] = mealn['Copper']+dish.nutrients['Copper']
+    end,
+    function(d, m)
+      meal = "  Meal "..m
+      mealn = {}
+      mealn['Sugars'],mealn['Fiber'],mealn['Copper'] = 0, 0, 0
+    end,
+    function(d, m)
+      print(meal)
+      local su, fi, cu = 
+        mealn['Sugars'],mealn['Fiber'],mealn['Copper']
+      su = math.floor(su*100)/100
+      fi = math.floor(fi*100)/100
+      cu = math.floor(cu*1E5)/100
+
+      print("Sugars: "..su,
+            "Fiber: "..fi, 
+            "Copper: "..cu)
+    end,
+    function(d)
+      if x~=y then
+        t=t..tex.center("\t\\section*{\\LARGE Week "..x.."}")
+        t=t.."\n\\vspace{-1em}\\rule{\\textwidth}{0.75pt}"
+        t=t.."\\vspace{1em}\n"
+      end
+      print("## DAY ", d)
+      t = t.."\n"..tex.center("{\\large\\textbf{Day "..d.."}}")
+      t = t.."\\vspace{-3em}"
+    end,
+    function(d)
+      y = x
+    end
+  )
+  --[[
+  feDMD
+    print each meal, 5 nutrients
+      Fiber, Vitamin A, Copper
+    each day, print header
+    each week, header
+    end of each week, new page
+  --]]
+  return t
 end
 
 function p.nutritionByWeek()
-end
-
-function p.scheduleByWeek()
 end
 
 
